@@ -1,64 +1,75 @@
+import { useState } from "react";
 import styled from "@emotion/styled";
 import { keyframes } from "@emotion/react";
-import { useNavigate } from "react-router-dom"; // 회원가입 이동 처리를 위해 추가
 import BG1 from "../assets/BG-1.svg";
 import BG2 from "../assets/BG-2.svg";
 import BG3 from "../assets/BG-3.svg";
 
-const Login = () => {
-  const navigate = useNavigate();
+const SignUp = () => {
+  // 연령대 선택 상태 관리 (기본값: '10대')
+  const [selectedAge, setSelectedAge] = useState("10대");
+
+  const ageGroups = ["10대", "20대", "30대", "40대", "50대", "60대", "70대", "전체"];
 
   return (
     <>
       <Body>
-        {/* 왼쪽 움직이는 배경 섹션 */}
         <BG_Wrapper>
           <BG_1></BG_1>
           <BG_2></BG_2>
           <BG_3></BG_3>
-          {/* 글씨를 감싸며, 배경을 0.5 불투명도로 덮는 레이어 */}
           <Front_ground>
             <Text_Box>
-              나에게 <br />
-              딱맞는 <br />
-              덕질메이트
+              어디에서 <br />
+              <span>팬즈</span>에서
             </Text_Box>
           </Front_ground>
         </BG_Wrapper>
-
-        {/* 오른쪽 로그인 폼 섹션 */}
         <Left_side>
           <Box>
             <Left_title>FanZ</Left_title>
-            <Left_text>로그인</Left_text>
+            <Left_text>회원가입</Left_text>
           </Box>
           <Input_box>
-            {/* 아이디 입력 란 */}
             <In_box>
               <Id>
-                아이디<span>*</span>
+                별명<span>*</span>
               </Id>
-              <Id_input placeholder="아이디를 입력해주세요" />
+              <Id_input placeholder="별명을 입력해주세요" />
             </In_box>
-
-            {/* 비밀번호 입력 란 */}
             <In_box>
               <Pw>
-                비밀번호<span>*</span>
+                한줄소개<span>*</span>
               </Pw>
-              <Id_input type="password" placeholder="비밀번호를 입력해주세요" />
+              <Id_input placeholder="한줄소개를 입력해주세요" />
+            </In_box>
+            <In_box>
+              <Pw>
+                관심분야<span>*</span>
+              </Pw>
+              <Id_input placeholder="엔터를 눌러 해시태그 추가하기" />
             </In_box>
 
-            {/* 로그인 완료 버튼 */}
-            <Auth_button>로그인</Auth_button>
+            {/* [신규 추가] 연령대 레이아웃 구역 */}
+            <In_box>
+              <Age_Label>
+                연령<span>*</span>
+              </Age_Label>
+              <Age_Chips_Wrapper>
+                {ageGroups.map((age) => (
+                  <Age_Chip
+                    key={age}
+                    type="button"
+                    isActive={selectedAge === age}
+                    onClick={() => setSelectedAge(age)}
+                  >
+                    {age}
+                  </Age_Chip>
+                ))}
+              </Age_Chips_Wrapper>
+            </In_box>
 
-            {/* 하단 회원가입 유도 영역 */}
-            <Register_Link_Bar>
-              아직 회원이 아니신가요?{" "}
-              <Register_Btn onClick={() => navigate("/signup")}>
-                회원가입
-              </Register_Btn>
-            </Register_Link_Bar>
+            <Auth_button>다음으로</Auth_button>
           </Input_box>
         </Left_side>
       </Body>
@@ -66,10 +77,9 @@ const Login = () => {
   );
 };
 
-// 무한 루프 배경 롤링 애니메이션 정의
 const rollUp = keyframes`
   0% { background-position-y: 0; }
-  100% { background-position-y: -1000px; }
+  100% { background-position-y: -1000px; } 
 `;
 
 const rollDown = keyframes`
@@ -136,6 +146,9 @@ const Text_Box = styled.div`
   font-weight: 800;
   line-height: 1.2;
   letter-spacing: -1px;
+  span {
+    color: #ffe8ea;
+  }
 `;
 
 const Left_side = styled.div`
@@ -204,7 +217,7 @@ const Id_input = styled.input`
   font-size: 14px;
   outline: none;
   background: transparent;
-  
+
   &::placeholder {
     color: #b3b3b3;
     font-size: 13px;
@@ -221,6 +234,44 @@ const Pw = styled.label`
   }
 `;
 
+/* ========================================================
+   [신규 추가 스타일] 연령 항목 라벨 및 칩 그룹 컴포넌트 
+   ======================================================== */
+const Age_Label = styled.label`
+  font-size: 13px;
+  font-weight: 700;
+  color: #333333;
+  span {
+    color: #ff4d4d;
+    margin-left: 2px;
+  }
+`;
+
+const Age_Chips_Wrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: 100%;
+  margin-top: 2px;
+`;
+
+const Age_Chip = styled.button`
+  background: ${(props) => (props.isActive ? "#a34e62" : "#ffffff")};
+  color: ${(props) => (props.isActive ? "#ffffff" : "#b3b3b3")};
+  border: 1px solid ${(props) => (props.isActive ? "#a34e62" : "#d9d9d9")};
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #a34e62;
+    color: ${(props) => (props.isActive ? "#ffffff" : "#a34e62")};
+  }
+`;
+
 const Auth_button = styled.button`
   width: 100%;
   background-color: #a34e62;
@@ -233,32 +284,10 @@ const Auth_button = styled.button`
   cursor: pointer;
   margin-top: 15px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  
+
   &:hover {
     background-color: #8c3f52;
   }
 `;
 
-/* 하단 가입 여부 텍스트 라인 */
-const Register_Link_Bar = styled.div`
-  text-align: center;
-  font-size: 12px;
-  color: #888888;
-  margin-top: 5px;
-  font-weight: 500;
-`;
-
-/* 회원가입 버튼 클릭 요소 */
-const Register_Btn = styled.span`
-  color: #a34e62;
-  font-weight: 700;
-  cursor: pointer;
-  margin-left: 5px;
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
-export default Login;
+export default SignUp;
